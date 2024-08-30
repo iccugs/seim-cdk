@@ -16,10 +16,20 @@ export class SeimCdkStack extends cdk.Stack {
                 exports.handler = async function(event) {
                     return {
                         statusCode: 200,
-                        body: JSON.stringify("Seim Test Lambda Function"),
+                        body: JSON.stringify('Seim Test Lambda Function'),
                     };
                 };
             `),
+        });
+
+        // Lambda function URL resource
+        const seimFunctionUrl = seimFunction.addFunctionUrl({
+            authType: lambda.FunctionUrlAuthType.NONE,
+        });
+
+        // CloudFormation output for URL
+        new cdk.CfnOutput(this, "seimFunctionUrlOutput", {
+            value: seimFunctionUrl.url,
         });
     }
 }
