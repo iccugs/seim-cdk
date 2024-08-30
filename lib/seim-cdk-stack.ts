@@ -10,7 +10,7 @@ export class SeimCdkStack extends cdk.Stack {
 
         // Lambda function service
         const seimFunction = new lambda.Function(this, "SeimFunction", {
-            runtime: lambda.Runtime.PYTHON_3_12, // Execution environment
+            runtime: lambda.Runtime.NODEJS_20_X, // Execution environment
             handler: "index.handler",
             code: lambda.Code.fromInline(`
                 exports.handler = async function(event) {
