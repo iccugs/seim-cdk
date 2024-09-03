@@ -16,6 +16,7 @@ import {
 import { LambdaRestApi } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
 import { HitCounter } from './hitcounter';
+import { TableViewer } from 'cdk-dynamo-table-viewer';
 
 export class SeimCdkStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -60,5 +61,11 @@ export class SeimCdkStack extends Stack {
         const gateway = new LambdaRestApi(this, "Endpoint", {
             handler: seimHitCounter.handler,
         });
+
+        // Define table viewer
+        const tv = new TableViewer(this, "ViewHitCounter", {
+            title: "Seim Hit Counter",
+            table: seimHitCounter.table,
+        })
     }
 }

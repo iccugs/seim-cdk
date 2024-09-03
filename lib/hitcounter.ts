@@ -16,10 +16,13 @@ export class HitCounter extends Construct {
     // Allows the counter function to be accessed outside of the class
     public readonly handler: Function;
 
+    // Allows accessing the hit counter table
+    public readonly table: Table;
+
     constructor(scope: Construct, id: string, props: HitCounterProps) {
         super(scope, id);
 
-        const table = new Table(this, "Hits", {
+        this.table = new Table(this, "Hits", {
             partitionKey: { name: "path", type: AttributeType.STRING },
         });
 
@@ -29,12 +32,12 @@ export class HitCounter extends Construct {
             code: Code.fromAsset("lambda"),
             environment: {
                 DOWNSTREAM_FUNCTION_NAME: props.downstream.functionName,
-                HITS_TABLE_NAME: table.tableName,
+                HITS_TABLE_NAME: this.table.tableName,
             },
         });
 
         // Grant the lambda role read/write permissions to the table
-        table.grantReadWriteData(this.handler);
+        this.table.grantReadWriteData(this.handler);
 
         // Grant the lambda role invoke permissions to the downstream function
         props.downstream.grantInvoke(this.handler);
